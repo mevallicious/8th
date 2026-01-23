@@ -1,0 +1,401 @@
+@import "tailwindcss";
+:root{
+  --pri:#fff;
+  --sec:#0f0f0f;
+  --tri:#3a3a3a;
+  --light:#fff;
+  --dark:#111;
+}
+
+/* ===== RESET ===== */
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  background-color: var(--sec);
+}
+
+body {
+  position: relative;
+}
+
+[data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* ================= OPENING (400vh) ================= */
+
+.opening{
+  position: relative;
+  height: 400vh;          
+  overflow: hidden;   
+}
+
+.opening, .intro, .archive, .outro {
+  pointer-events: none; 
+}
+
+/* THREE MODEL */
+h1{
+  text-transform: uppercase;
+  color: #fff;
+  font-size: 180px;
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+a{
+  cursor: pointer;
+}
+
+a,p{
+  text-decoration: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 0.9;
+
+}
+
+.model {
+  position: absolute; /* Fixed nahi, absolute! */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: auto; /* Taaki text click ho sake */
+}
+
+
+
+
+
+section{
+  width: 100vw;
+  height: 100vh;
+}
+
+
+.intro{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1em;
+}
+
+.header-row{
+  display: flex;
+  gap: 12em;
+  align-items: center;
+}
+
+.header-row p{
+  text-transform: uppercase;
+  width: 20%;
+}
+
+.archive{
+  height: 200vh;
+  display: flex;
+  flex-direction: column;
+  gap: 3em;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.archive-item {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+
+
+.archive-header p {
+  font-style: italic;
+}
+
+.archive h2{
+  font-size: 120px;
+  font-weight: 300;
+  color: #4f4f4f;
+}
+
+.archive-info{
+  width: 100%;
+  padding: 1em;
+  display: flex;
+    gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+.archive-info p{
+  text-transform: uppercase;
+  color: #4f4f4f;
+}
+
+.outro{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6em 2em 2em 2em;
+}
+
+.outro-copy h2{
+  width: 75%;
+  text-transform: uppercase;
+  font-size: 60px;  
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 0.5em;
+}
+
+.outro-copy h2 .line{
+  position: relative;
+  clip-path: polygon(0 0,100% 0,100% 100%,0% 100%);
+  overflow: hidden;
+  display: block;
+}
+
+.outro-copy h2 .line span{
+  position: relative;
+  will-change: transform;
+  display: flex;
+  transform: translateY(70px);
+}
+
+.outro p{
+  display: flex;
+  margin: 1em 0;
+  gap: 2em;
+  text-transform:  uppercase;
+}
+
+footer{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  text-transform: uppercase;
+}
+
+/* LENIS RECOMMENDED CSS (Iske bina Lenis scroll nahi karega) */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ================= SECTION 2 – SPOTLIGHT ================= */
+
+.s2-spotlight img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+  .s2-spotlight h1{
+  font-size: 5rem;
+  font-weight: 500;
+  letter-spacing: -0.1rem;
+  line-height: 0.9;
+}
+
+section{
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.s2-intro-header,.s2-outro-header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--red);
+  color: var(--light);
+}
+
+.s2-intro-header,.s2-outro-header h1 {
+  width: 100%;
+  text-align: center;
+}
+
+.s2-spotlight{
+  color: var(--light);
+  background-color: var(--dark);
+  perspective: 2000px;
+}
+
+.s2-spotlight-images,
+.s2-cover-img{
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.s2-img{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 500px;       
+  height: 350px;
+  will-change: transform;
+}
+
+.s2-cover-img{
+  will-change: transform;
+}
+
+.s2-intro-header,
+.s2-outro-header{
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  text-align: center;
+  width: 70%;
+}
+
+.s2-intro-header{ z-index:1 }
+.s2-outro-header{ z-index:10 }
+
+@media (max-width:1000px) {
+  .s2-intro h1,
+  .s2-intro-header,
+  .s2-outro-header{
+    width: 100%;
+  }
+
+  .s2-intro-header,
+  .s2-outro-header{
+    padding: 2rem;
+  }
+
+  .s2-img{
+    width: 90%;
+    height: auto;
+  }
+}
+
+
+/* ================= FOOTER ================= */
+
+.ft-footer-content h1{
+    font-size: 4rem;
+    font-weight: 500 ;
+    letter-spacing: -0.04rem;
+    line-height: 1.2;
+}
+
+section.ft-footer{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+.ft-footer-content h1{
+    width: 45%;
+    text-align: center;
+}
+
+.ft-footer{
+    background-color:#0f0f0f;
+    color:#fff;
+}
+
+.ft-footer-content{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.ft-footer-content * {
+    pointer-events: auto;
+}
+
+.ft-object-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.ft-object{
+ 
+    position: absolute;
+    width: max-content;
+    font-size:1rem;
+    font-weight: 500;
+    background-color: #f1c194;
+    color: #0f0f0f;
+    height: 150px;
+    width:150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    cursor: grab;
+    user-select: none;
+    pointer-events: auto;
+    z-index: 2;
+}
+
+.ft-object:active{
+    cursor: grabbing;
+}
+
+
+.contact-input{
+  background:#1a1a1a;
+  border:1px solid #333;
+  padding:0.75rem 1rem;
+  color:white;
+  font-size:0.875rem;
+}
+
+.contact-input::placeholder{
+  color:#777;
+}
+
+.contact-input:focus{
+  outline:none;
+  border-color:#fff;
+}

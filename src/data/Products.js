@@ -1,0 +1,81 @@
+const products = [
+  {
+    name: "Oak Lounge Chair",
+    url: "/products/oak-lounge-chair.png",
+    price: 14999,
+    tag: "Chairs",
+    img: "https://images.unsplash.com/photo-1732020858816-93c130ab8f49?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDd8fDNkJTIwYXJ0fGVufDB8fDB8fHww",
+  },
+  {
+    name: "Soft Linen Sofa",
+    url: "/products/soft-linen-sofa.png",
+    price: 54999,
+    tag: "Sofas",
+    img: "https://images.unsplash.com/photo-1725961476494-efa87ae3106a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bmVvbiUyMDNkJTIwYXJ0fGVufDB8fDB8fHww",
+  },
+  {
+    name: "Walnut Coffee Table",
+    url: "/products/walnut-coffee-table.png",
+    price: 18999,
+    tag: "Tables",
+    img: "https://images.unsplash.com/photo-1658487476847-a180f98870d0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8M2QlMjBhcnR8ZW58MHx8MHx8fDA%3D",
+  },
+  {
+    name: "Classic Dining Table",
+    url: "/products/classic-dining-table.png",
+    price: 42999,
+    tag: "Dining",
+    img: "https://images.unsplash.com/photo-1634986666676-ec8fd927c23d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8M2QlMjBhcnR8ZW58MHx8MHx8fDA%3D",
+  },
+  {
+    name: "Minimal Side Table",
+    url: "/products/minimal-side-table.png",
+    price: 10999,
+    tag: "Tables",
+    img: "https://images.unsplash.com/photo-1634986666676-ec8fd927c23d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8M2QlMjBhcnR8ZW58MHx8MHx8fDA%3D",
+  },
+  {
+    name: "Comfort Armchair",
+    url: "/products/comfort-armchair.png",
+    price: 21999,
+    tag: "Chairs",
+    img: "https://images.unsplash.com/photo-1637666505754-7416ebd70cbf?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fDNkJTIwYXJ0fGVufDB8fDB8fHww",
+  },
+  {
+    name: "Natural Wood Bed",
+    url: "/products/natural-wood-bed.png",
+    price: 68999,
+    tag: "Beds",
+    img: "https://plus.unsplash.com/premium_photo-1719864933065-6639a2d32e56?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDl8fDNkJTIwYXJ0fGVufDB8fDB8fHww",
+  },
+  {
+    name: "Modern TV Unit",
+    url: "/products/modern-tv-unit.png",
+    price: 29999,
+    tag: "Storage",
+    img: "https://plus.unsplash.com/premium_photo-1725198933305-8ad7fb751056?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fDNkJTIwYXJ0fGVufDB8fDB8fHww",
+  },
+  {
+    name: "Compact Study Desk",
+    url: "/products/compact-study-desk.png",
+    price: 25999,
+    tag: "Work",
+    img: "https://images.unsplash.com/photo-1704098712161-67949aaf0eee?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fDNkJTIwYXJ0fGVufDB8fDB8fHww",
+  },
+  {
+    name: "Fabric Recliner Chair",
+    url: "/products/fabric-recliner.png",
+    price: 38999,
+    tag: "Chairs",
+    img: "https://images.unsplash.com/photo-1658487476833-f094aaf4a66c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fDNkJTIwYXJ0fGVufDB8fDB8fHww",
+  },
+  {
+    name: "Solid Wood Bookshelf",
+    url: "/products/solid-wood-bookshelf.png",
+    price: 34999,
+    tag: "Storage",
+    img: "https://images.unsplash.com/photo-1642059893618-22daf30e92a2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8M2QlMjBhcnR8ZW58MHx8MHx8fDA%3D",
+  },
+];
+
+export default products;

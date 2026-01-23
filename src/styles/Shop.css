@@ -1,0 +1,274 @@
+:root{
+  --base-100:#fff;
+  --base-200:#999;
+  --base-300:#343434;
+  --base-400:#212121;
+  --base-500:#000;
+}
+
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,body{
+  width: 100%;
+  height: 100%;
+}
+
+body{
+  font-family: sans-serif;
+  overflow-x: hidden;
+}
+
+p{
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* ================= CONTAINER ================= */
+
+.shop-container{
+  position: relative;
+  width: 100%;
+  height:100vh;
+  overflow: hidden;
+  background-color: var(--base-500);
+}
+
+/* ================= NAV ================= */
+
+.shop-nav{
+  position: absolute;
+  top:10%;   
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2rem;
+  z-index: 9;
+}
+
+.shop-nav p {
+  text-transform: uppercase;
+}
+
+.shop-nav .product-name p{
+  color:var(--base-200);
+}
+
+/* ================= GALLERY ================= */
+
+.gallery{
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+}
+
+.products{
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.products li{
+  position: absolute;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.products li img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain; 
+}
+
+/* ================= CONTROLLER (X BUTTON) ================= */
+
+.controller{
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 11rem;
+  height: 11rem;
+  user-select: none;
+  cursor: pointer;
+  z-index: 12; /* 🔥 ABOVE EVERYTHING */
+}
+
+.controller-inner{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 5rem;
+  height: 5rem;
+  background-color: var(--base-300);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: circle(40% at 50% 50%);
+  cursor: pointer;
+  z-index: 13; /* 🔥 X ABOVE CARD */
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+
+.close-icon{
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+.close-icon span{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--base-100);
+}
+
+.close-icon span:first-child{
+  transform: translate(-50%,-50%) rotate(45deg);
+}
+
+.close-icon span:last-child{
+  transform: translate(-50%,-50%) rotate(-45deg);
+}
+
+.controller-outer{
+  position: absolute;
+  inset: 0;
+  background-color: var(--base-400);
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+  z-index: 12;
+}
+
+.controller-label p{
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--base-100);
+}
+
+.nav-btn{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.125rem;
+  color: var(--base-100);
+  cursor: pointer;
+}
+
+.nav-btn.prev{ left: 1rem; }
+.nav-btn.next{ right: 1rem; }
+
+.nav-btn.disabled{
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* ================= FULLSCREEN BACKGROUND ================= */
+
+.product-banner{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.product-banner img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.2);
+}
+
+/* ================= PREVIEW CARD ================= */
+
+.product-preview{
+  position: absolute;
+  top: 47.25%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30%;
+  height: 67%;
+  padding: 2rem 1rem;
+  border-radius: 0.5rem;
+  background-color: rgba(255,255,255,0.35);
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  z-index: 8; /* 🔥 BELOW X BUTTON */
+}
+
+.product-preview-info{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.product-preview-name p{
+  font-size: 0.95rem;
+}
+
+.product-preview-tag p{
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color:var(--base-500);
+  color: var(--base-100);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.product-preview-img{
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 0.25rem;
+  background-color: var(--base-100);
+  overflow: hidden;
+}
+
+.product-preview-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn{
+  background-color: var(--base-500);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.25rem;
+}
+
+.btn a{
+  display: block;
+  padding: 1rem 0;
+  text-decoration: none;
+  color: var(--base-100);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width:1000px){
+  .product-preview{
+    width: calc(100% - 2rem);
+  }
+}
