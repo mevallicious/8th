@@ -1,0 +1,405 @@
+    /* --- OVERLAY WITH BLUR --- */
+    .co-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7); /* Slightly darker overlay */
+    
+    /* THIS ADDS THE BLUR EFFECT */
+    backdrop-filter: blur(8px); 
+    -webkit-backdrop-filter: blur(8px); /* Safari support */
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    }
+
+    /* --- MAIN CONTENT CONTAINER (DARK MODE) --- */
+    .co-modal-content {
+    display: flex;
+    width: 900px;
+    height: 550px;
+    background-color: #050505; /* Deep black background */
+    border: 1px solid #333333; /* Dark gray border */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #ffffff; /* Default text to white */
+    }
+
+    /* ================= LEFT PANEL (DARK MODE) ================= */
+    .co-left-panel {
+    flex: 0 0 380px;
+    background-color: #050505;
+    border-right: 1px solid #333333;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    }
+
+    .co-summary-header h2, .co-coupon-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+    color: #ffffff; /* White text */
+    }
+
+    .co-close-panel {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #888888; /* Dim close button */
+    }
+
+    .co-close-panel:hover {
+    color: #ffffff;
+    }
+
+    /* Order Summary Items */
+    .co-item-list {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    background: #111111; /* Dark gray background for list */
+    padding: 12px;
+    border-radius: 8px;
+    }
+
+    .co-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .co-item-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    color: #ffffff; /* White text */
+    }
+
+    .co-item-price-qty {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #a0a0a0; /* Light gray text */
+    }
+
+    /* Totals */
+    .co-totals {
+    background: #111111; /* Dark gray background */
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    }
+
+    .co-total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    color: #cccccc; /* Light gray text */
+    }
+
+    .discount-row {
+    color: #00ff7f; /* Brighter green for dark mode */
+    }
+
+    .final-total {
+    font-weight: 700;
+    color: #ffffff; /* White text */
+    font-size: 1rem;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #333333;
+    }
+
+    /* Coupons Section */
+    .co-coupon-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    }
+
+    .co-apply-coupon-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #111111;
+    border: 1px dashed #00ff7f;
+    color: #00ff7f;
+    padding: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    justify-content: center;
+    transition: all 0.2s;
+    }
+
+    .co-apply-coupon-btn:hover { background: rgba(0, 255, 127, 0.1); }
+
+    .co-applied-coupon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 255, 127, 0.15);
+    border: 1px solid #00ff7f;
+    padding: 12px;
+    border-radius: 8px;
+    }
+
+    .co-applied-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #00ff7f;
+    font-weight: 600;
+    font-size: 0.9rem;
+    }
+
+    .co-remove-btn {
+    background: none;
+    border: none;
+    color: #ff4444; /* Brighter red for dark mode */
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    }
+
+    /* Coupon View Internals */
+    .co-coupon-input-group {
+    display: flex;
+    align-items: center;
+    background: #111111;
+    border: 1px solid #444444;
+    border-radius: 6px;
+    padding: 5px 10px;
+    margin-bottom: 20px;
+    }
+
+    .co-coupon-input-group input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 8px;
+    font-size: 0.9rem;
+    background: transparent;
+    color: #ffffff;
+    }
+
+    .co-apply-text-btn {
+    background: none;
+    border: none;
+    color: #ffffff; /* Force to white text */
+    font-weight: 700;
+    cursor: pointer;
+    }
+
+    .co-available-coupons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    }
+
+    .co-coupon-card {
+    background: #111111;
+    border: 1px dashed #444444;
+    border-radius: 8px;
+    overflow: hidden;
+    }
+
+    .co-coupon-card-header {
+    background: #ffffff; /* White header in dark mode */
+    color: #000000; /* Black text */
+    text-align: center;
+    padding: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    }
+
+    .co-coupon-card-body {
+    padding: 12px;
+    }
+
+    .co-coupon-code-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    }
+
+    .co-coupon-code {
+    border: 1px dashed #ffffff;
+    color: #ffffff;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    }
+
+    .co-coupon-code-row button {
+    background: none;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    color: #ffffff;
+    }
+
+    .co-coupon-desc {
+    font-size: 0.8rem;
+    color: #00ff7f;
+    margin: 0;
+    }
+
+    /* ================= RIGHT PANEL (DARK MODE) ================= */
+    .co-right-panel {
+    flex: 1;
+    background-color: #000000; /* Pure black background */
+    padding: 24px 40px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    }
+
+    .co-close-modal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #888888;
+    }
+
+    .co-close-modal:hover {
+    color: #ffffff;
+    }
+
+    .co-right-header {
+    text-align: center;
+    margin-bottom: 40px;
+    }
+
+    .co-logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    border: 2px solid #ffffff; /* White border logo */
+    display: inline-block;
+    padding: 4px 10px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    }
+
+    .co-progress-bar {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #666666; /* Dimmer steps */
+    margin-bottom: 8px;
+    }
+
+    .co-step.active {
+    color: #ffffff;
+    font-weight: 600;
+    }
+
+    .co-progress-line {
+    height: 4px;
+    background: #222222; /* Dark line */
+    border-radius: 2px;
+    position: relative;
+    }
+
+    .co-progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 5%;
+    background: #ffffff; /* White progress fill */
+    border-radius: 2px;
+    }
+
+    /* Form Area */
+    .co-checkout-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .co-checkout-form h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    color: #ffffff;
+    }
+
+    .co-mobile-input {
+    display: flex;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #444444;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    }
+
+    .co-country-code {
+    padding: 12px;
+    background: #111111;
+    border-right: 1px solid #444444;
+    color: #888888;
+    font-size: 0.95rem;
+    }
+
+    .co-mobile-input input {
+    flex: 1;
+    border: none;
+    padding: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    background: transparent;
+    color: #ffffff;
+    }
+
+    .co-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #cccccc;
+    margin-bottom: 25px;
+    }
+
+    .co-checkbox-label input[type="checkbox"] {
+    filter: invert(1); /* Forces checkbox to be white */
+    }
+
+    .co-get-otp-btn {
+    background: #ffffff; /* White button in dark mode */
+    color: #000000; /* Black text */
+    width: 100%;
+    max-width: 300px;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    }
+
+    .co-get-otp-btn:hover {
+    background: #e6e6e6;
+    transform: scale(1.01);
+    }

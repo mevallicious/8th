@@ -1,0 +1,157 @@
+/* PAGE */
+.contact-page {
+  margin-top: 6%;
+  /* min-height: 100vh; */
+  background: #090701;
+  color: #ffffff;
+  background-color: #0f0f0f;
+  overflow: hidden;
+}
+
+/* CURVED LOOP */
+.curved-nav {
+  background: #b4f000;
+  display: none;
+  justify-content: center;
+  padding: 12px 10px;
+}
+
+.top-loop{
+  margin-bottom: 10px;
+}
+
+.bottom-loop {
+  margin-top: -150px;
+}
+
+@media (min-width: 768px) {
+  .curved-nav {
+    display: flex;
+  }
+}
+
+/* SECTION */
+.contact-section {
+  padding: 20px 20px;
+}
+
+.contact-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  gap: 60px;
+}
+
+@media (min-width: 1024px) {
+  .contact-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* LEFT FORM */
+.contact-label {
+  color: #b4f000;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.contact-heading {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  line-height: 1.15;
+}
+
+/* FORM */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.form-grid input,
+.form-grid textarea {
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  background-color: white ;
+  font-size: 14px;
+  outline: none;
+  color: black;
+}
+
+.form-grid textarea {
+  resize: none;
+}
+
+.form-grid .full {
+  grid-column: span 2;
+}
+
+/* BUTTON */
+.submit-btn {
+  margin-top: 8px;
+  background: #b4f000;
+  color: #000;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  width: fit-content;
+  transition: transform 0.2s ease;
+}
+
+.submit-btn:hover {
+  transform: scale(0.95);
+}
+
+/* RIGHT INFO CARD */
+.contact-info {
+  background: #b4f000;
+  color: #000;
+  padding: 40px;
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.contact-info h2 {
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+
+.info-block {
+  margin-bottom: 22px;
+}
+
+.info-block h3 {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* SOCIAL */
+.socials {
+  display: flex;
+  gap: 18px;
+  font-size: 20px;
+}
+
+/* DECOR */
+.decor-circle {
+  position: absolute;
+  top: -45px;
+  right: -45px;
+  width: 140px;
+  height: 140px;
+  background: #000;
+  border-radius: 50%;
+  opacity: 0.18;
+}
