@@ -10,20 +10,48 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { useGSAP } from "@gsap/react";
 import { Link } from 'react-router-dom';
 import NavBar from '../components/Navbar';
-
+import Lenis from 'https://unpkg.com/lenis@1.1.18/dist/lenis.mjs';
 
 gsap.registerPlugin(CustomEase, SplitText, ScrollTrigger, Flip);
 
 const Home = () => {
-    // Refs
+    // ================= REFS =================
     const modelContainerRef = useRef(null);
     const spotlightRef = useRef(null);
     const footerRef = useRef(null);
     const footerObjContainerRef = useRef(null);
 
+    // Image Trail Refs
+    const trailContainerRef = useRef(null);
+    const trailRef = useRef([]); 
+    const mouseRef = useRef({ x: 0, y: 0, lastX: 0, lastY: 0 });
+    const trailStateRef = useRef({
+        isMoving: false,
+        isCursorInContainer: false,
+        lastRemovalTime: 0,
+        lastSteadyImageTime: 0,
+    });
+
+    // Image Trail Config
+    const trailConfig = {
+        imageCount: 3,
+        imageLifeSpan: 800,
+        mouseThreshold: 100,
+        idleCursorInterval: 800,
+        inDuration: 600,
+        outDuration: 600,
+        inEasing: "cubic-bezier(0.23, 1, 0.32, 1)",
+        outEasing: "cubic-bezier(0.19, 1, 0.22, 1)"
+    };
+
+    const trailImages = Array.from({ length: trailConfig.imageCount }, (_, i) => `/assets/img-${i + 1}.avif`);
+
     useGSAP(() => {
+        // Initialize Smooth Scrolling
+        const lenis = new Lenis({ autoRaf: true });
 
         /* ================= 1. SECTION 1 – 3D MODEL ================= */
+        let modelAnimationFrame;
         const modelSection = () => {
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -54,12 +82,8 @@ const Home = () => {
             const baseRotationY = Math.PI / 2;
 
             const loader = new GLTFLoader();
-            // Agar purana model use kar raha hai toh extension fix yahan lagana padega
-            // loader.register((parser) => new KHRMaterialsPbrSpecularGlossinessExtension(parser)); 
-            
             loader.load('/assets/gaming_chair_kiiro-v1.glb', (gltf) => {
                 model = gltf.scene;
-                // Material Fix logic
                 model.traverse((node) => {
                     if (node.isMesh && node.material) {
                         node.material.color.set(0xffc400);
@@ -111,7 +135,7 @@ const Home = () => {
                     model.rotation.x = scrollRotationX + dragRotationX;
                 }
                 renderer.render(scene, camera);
-                requestAnimationFrame(animate);
+                modelAnimationFrame = requestAnimationFrame(animate);
             };
             animate();
         };
@@ -181,9 +205,95 @@ const Home = () => {
             });
         };
 
-        /* ================= 3. FOOTER (MATTER.JS) ================= */
+        /* ================= 3. IMAGE TRAIL (NEW) ================= */
+        const createImage = () => {
+            if (!trailStateRef.current.isCursorInContainer || !trailContainerRef.current) return;
+
+            const img = document.createElement("img");
+            img.src = trailImages[Math.floor(Math.random() * trailImages.length)];
+            
+            const rotation = (Math.random() - 0.5) * 40;
+            const rect = trailContainerRef.current.getBoundingClientRect();
+            const relativeX = mouseRef.current.x - rect.left;
+            const relativeY = mouseRef.current.y - rect.top;
+
+            img.className = "trail-img";
+            img.style.left = `${relativeX}px`;
+            img.style.top = `${relativeY}px`;
+            img.style.opacity = "0";
+            img.style.transform = `translate(-50%, -50%) rotate(${rotation}deg) scale(0.5)`;
+
+            trailContainerRef.current.appendChild(img);
+
+            requestAnimationFrame(() => {
+                img.style.transition = `transform ${trailConfig.inDuration}ms ${trailConfig.inEasing}, opacity ${trailConfig.inDuration}ms ease`;
+                img.style.transform = `translate(-50%, -50%) rotate(${rotation}deg) scale(1)`;
+                img.style.opacity = "1";
+            });
+
+            trailRef.current.push({
+                element: img,
+                rotation: rotation,
+                removeTime: Date.now() + trailConfig.imageLifeSpan
+            });
+        };
+
+        const handleTrailMouseMove = (e) => {
+            mouseRef.current.x = e.clientX;
+            mouseRef.current.y = e.clientY;
+            
+            if (trailContainerRef.current) {
+                const rect = trailContainerRef.current.getBoundingClientRect();
+                trailStateRef.current.isCursorInContainer = (
+                    e.clientX >= rect.left && e.clientX <= rect.right &&
+                    e.clientY >= rect.top && e.clientY <= rect.bottom
+                );
+            }
+
+            if (trailStateRef.current.isCursorInContainer) {
+                trailStateRef.current.isMoving = true;
+                clearTimeout(window.trailMoveTimeout);
+                window.trailMoveTimeout = setTimeout(() => {
+                    trailStateRef.current.isMoving = false;
+                }, 100);
+            }
+        };
+
+        let trailAnimationFrame;
+        const animateTrail = () => {
+            const now = Date.now();
+            if (trailStateRef.current.isCursorInContainer) {
+                const dist = Math.sqrt(
+                    Math.pow(mouseRef.current.x - mouseRef.current.lastX, 2) + 
+                    Math.pow(mouseRef.current.y - mouseRef.current.lastY, 2)
+                );
+
+                if (trailStateRef.current.isMoving && dist > trailConfig.mouseThreshold) {
+                    mouseRef.current.lastX = mouseRef.current.x;
+                    mouseRef.current.lastY = mouseRef.current.y;
+                    createImage();
+                }
+                if (!trailStateRef.current.isMoving && now - trailStateRef.current.lastSteadyImageTime > trailConfig.idleCursorInterval) {
+                    trailStateRef.current.lastSteadyImageTime = now;
+                    createImage();
+                }
+            }
+
+            if (trailRef.current.length > 0 && now >= trailRef.current[0].removeTime) {
+                const imgObj = trailRef.current.shift();
+                imgObj.element.style.transition = `transform ${trailConfig.outDuration}ms ${trailConfig.outEasing}, opacity ${trailConfig.outDuration}ms ease`;
+                imgObj.element.style.transform = `translate(-50%, -50%) rotate(${imgObj.rotation}deg) scale(0)`;
+                imgObj.element.style.opacity = "0";
+                setTimeout(() => {
+                    if (imgObj.element.parentNode) imgObj.element.parentNode.removeChild(imgObj.element);
+                }, trailConfig.outDuration);
+            }
+            trailAnimationFrame = requestAnimationFrame(animateTrail);
+        };
+
+        /* ================= 4. FOOTER (MATTER.JS) ================= */
         const footerGrab = () => {
-            const config = { gravity: { x: 0, y: 1 }, restitution: 0.5, friction: 0.2, frictionAir: 0.02, density: 0.002, wallThickness: 200, mouseStiffness: 0.6 };
+            const config = { gravity: { x: 0, y: 1 }, restitution: 0.5, friction: 0.2, frictionAir: 0.02, density: 0.002 };
             let engine, bodies = [];
 
             const initPhysics = () => {
@@ -201,7 +311,7 @@ const Home = () => {
 
                 const objects = container.querySelectorAll(".ft-object");
                 objects.forEach((obj, index) => {
-                    const body = Matter.Bodies.rectangle((index * (rect.width / objects.length)) + 75, -200 - (index * 250), 150, 150, { restitution: 0.5, friction: 0.2, frictionAir: 0.02, density: 0.002 });
+                    const body = Matter.Bodies.rectangle((index * (rect.width / objects.length)) + 75, -200 - (index * 250), 150, 150, config);
                     Matter.Body.setAngle(body, (Math.random() - 0.5) * Math.PI);
                     bodies.push({ body, element: obj });
                     Matter.World.add(engine.world, body);
@@ -230,149 +340,121 @@ const Home = () => {
             });
         };
 
+        // Initialize Everything
         modelSection();
         spotLight();
+        window.addEventListener("mousemove", handleTrailMouseMove);
+        animateTrail();
         footerGrab();
 
- 
+        // Cleanup function
         return () => {
+            window.removeEventListener("mousemove", handleTrailMouseMove);
+            cancelAnimationFrame(modelAnimationFrame);
+            cancelAnimationFrame(trailAnimationFrame);
             ScrollTrigger.getAll().forEach(t => t.kill());
+            lenis.destroy();
         };
     }, []);
 
-    
     return (
         <div className="main-app">
             <NavBar/>
-             <section className="opening">
-            {/* Three.js Canvas Ref */}
-            <div className="model" ref={modelContainerRef}></div>
+            
+            {/* ================= SECTION 1 ================= */}
+            <section className="opening">
+                <div className="model" ref={modelContainerRef}></div>
+                <section className="intro">
+                    <div className="header-row"><h1>Office for</h1></div>
+                    <div className="header-row">
+                        <h1>Future</h1>
+                        <p>Innovative Furniture Studio. Crafting sustainable, bespoke, and functional solutions for homes and businesses.</p>
+                    </div>
+                    <div className="header-row"><h1>Furnituring</h1></div>
+                </section>
 
+                <section className="archive">
+                    <div className="archive-header"><p>Collection</p></div>
+                    <div className="archive-item">
+                        <h2>Ripple Bench</h2>
+                        <div className="archive-info"><p>US / EU</p><p>Design Concept</p><p>Bench</p><p>Outdoor</p></div>
+                    </div>
+                    <div className="archive-item">
+                        <h2>Arc Table</h2>
+                        <div className="archive-info"><p>US / EU</p><p>Design Concept</p><p>Table</p><p>Modern</p></div>
+                    </div>
+                    <div className="archive-item">
+                        <h2>Gaming Chair</h2>
+                        <div className="archive-info"><p>US / EU</p><p>Immersive Experience</p><p>Chair</p><p>Indoor</p></div>
+                    </div>
+                    <div className="archive-item">
+                        <h2>Flow Chair</h2>
+                        <div className="archive-info"><p>US / EU</p><p>Design Concept</p><p>ArmChair</p><p>Minimalist</p></div>
+                    </div>
+                    <div className="archive-item">
+                        <h2>Halo Pendant</h2>
+                        <div className="archive-info"><p>US / EU</p><p>Project Details</p><p>Lighting</p><p>Modern</p></div>
+                    </div>
+                </section>
 
-
-            <section className="intro">
-                <div className="header-row">
-                    <h1>Office for</h1>
-                </div>
-                <div className="header-row">
-                    <h1>Future</h1>
-                    <p>Innovative Furniture Studio. Crafting sustainable, bespoke, and functional solutions for homes and businesses.</p>
-                </div>
-                <div className="header-row">
-                    <h1>Furnituring</h1>
-                </div>
+                <section className="outro">
+                    <div className="outro-copy">
+                        <h2>We are an Indian, German and Italian multidisciplinary design atelier specializing in bespoken furniture, spatial installation, and immersive visual experiences</h2>
+                        <p>About <span>mev.puremev.com</span></p>
+                        <p>Contact <span>mev.puremev.com</span></p>
+                    </div>
+                    <div className="outro-footer">
+                        <p>We are an Indian, German and Italian multidisciplinary design atelier specializing in bespoken furniture, spatial installation, and immersive visual experiences</p>
+                    </div>
+                </section>
             </section>
 
-            <section className="archive">
-                <div className="archive-header">
-                    <p>Collection</p>
+            {/* ================= SECTION 2 ================= */}
+            <section className="s2-spotlight" ref={spotlightRef}>
+                <div className="s2-spotlight-images">
+                    {[...Array(20)].map((_, i) => (
+                        <div className="s2-img" key={i}>
+                            <img 
+                                src={i % 2 === 0 
+                                    ? "https://images.unsplash.com/photo-1732020858816-93c130ab8f49?w=500" 
+                                    : "https://images.unsplash.com/photo-1725961476494-efa87ae3106a?w=500"} 
+                                alt={`spotlight-${i}`} 
+                            />
+                        </div>
+                    ))}
                 </div>
-                <div className="archive-item">
-                    <h2>Ripple Bench</h2>
-                    <div className="archive-info">
-                        <p>US / EU</p>
-                        <p>Design Concept</p>
-                        <p>Bench</p>
-                        <p>Outdoor</p>
-                    </div>
+                <div className="s2-cover-img">
+                    <img src="https://images.unsplash.com/photo-1732020858816-93c130ab8f49?w=500" alt="cover" />
                 </div>
-                <div className="archive-item">
-                    <h2>Arc Table</h2>
-                    <div className="archive-info">
-                        <p>US / EU</p>
-                        <p>Design Concept</p>
-                        <p>Table</p>
-                        <p>Modern</p>
-                    </div>
-                </div>
-                <div className="archive-item">
-                    <h2>Gaming Chair</h2>
-                    <div className="archive-info">
-                        <p>US / EU</p>
-                        <p>Immersive Experience</p>
-                        <p>Chair</p>
-                        <p>Indoor</p>
-                    </div>
-                </div>
-                <div className="archive-item">
-                    <h2>Flow Chair</h2>
-                    <div className="archive-info">
-                        <p>US / EU</p>
-                        <p>Design Concept</p>
-                        <p>ArmChair</p>
-                        <p>Minimalist</p>
-                    </div>
-                </div>
-                <div className="archive-item">
-                    <h2>Halo Pendant</h2>
-                    <div className="archive-info">
-                        <p>US / EU</p>
-                        <p>Project Details</p>
-                        <p>Lighting</p>
-                        <p>Modern</p>
-                    </div>
-                </div>
+                <div className="s2-intro-header"><h1>When Motion and Stillness Collide in Layers</h1></div>
+                <div className="s2-outro-header"><h1>What Follows is not Stillness but Reverberation</h1></div>
             </section>
 
-            <section className="outro">
-                <div className="outro-copy">
-                    <h2>We are an Indian, German and Italian multidisciplinary design atelier specializing in bespoken furniture, spatial installation, and immersive visual experiences</h2>
-                    <p>About <span>mev.puremev.com</span></p>
-                    <p>Contact <span>mev.puremev.com</span></p>
+            {/* ================= IMAGE TRAIL (NEW) ================= */}
+            <section ref={trailContainerRef} className="trail-section">
+                <p className="trail-text">
+                    Move your cursor around
+                </p>
+            </section>
+
+            {/* ================= SECTION 3 ================= */}
+            <section className="ft-footer" ref={footerRef}>
+                <div className="ft-object-container" ref={footerObjContainerRef}>
+                    <div className="ft-object">Chair</div>
+                    <div className="ft-object">Table</div>
+                    <div className="ft-object">Bed</div>
+                    <div className="ft-object">Sofa</div>
+                    <div className="ft-object">Recliner</div>
+                    <div className="ft-object">Dining Table</div>
+                    <div className="ft-object">Bookshelf</div>
+                    <div className="ft-object">Armchair</div>
+                    <div className="ft-object">Wardrobe</div>
                 </div>
-                <div className="outro-footer">
-                    <p>We are an Indian, German and Italian multidisciplinary design atelier specializing in bespoken furniture, spatial installation, and immersive visual experiences</p>
+
+                <div className="ft-footer-content">
+                    <h1>Designed to be felt, not catalogued.</h1>
                 </div>
             </section>
-        </section>
-
-        {/* ================= SECTION 2 – SPOTLIGHT ================= */}
-        <section className="s2-spotlight" ref={spotlightRef}>
-            <div className="s2-spotlight-images">
-
-                {[...Array(20)].map((_, i) => (
-                    <div className="s2-img" key={i}>
-                        <img 
-                            src={i % 2 === 0 
-                                ? "https://images.unsplash.com/photo-1732020858816-93c130ab8f49?w=500" 
-                                : "https://images.unsplash.com/photo-1725961476494-efa87ae3106a?w=500"} 
-                            alt={`spotlight-${i}`} 
-                        />
-                    </div>
-                ))}
-            </div>
-
-            <div className="s2-cover-img">
-                <img src="https://images.unsplash.com/photo-1732020858816-93c130ab8f49?w=500" alt="cover" />
-            </div>
-
-            <div className="s2-intro-header">
-                <h1>When Motion and Stillness Collide in Layers</h1>
-            </div>
-
-            <div className="s2-outro-header">
-                <h1>What Follows is not Stillness but Reverberation</h1>
-            </div>
-        </section>
-
-        {/* ================= SECTION 3 – FOOTER (MATTER.JS) ================= */}
-        <section className="ft-footer" ref={footerRef}>
-            <div className="ft-object-container" ref={footerObjContainerRef}>
-                <div className="ft-object">Chair</div>
-                <div className="ft-object">Table</div>
-                <div className="ft-object">Bed</div>
-                <div className="ft-object">Sofa</div>
-                <div className="ft-object">Recliner</div>
-                <div className="ft-object">Dining Table</div>
-                <div className="ft-object">Bookshelf</div>
-                <div className="ft-object">Armchair</div>
-                <div className="ft-object">Wardrobe</div>
-            </div>
-
-            <div className="ft-footer-content">
-                <h1>Designed to be felt, not catalogued.</h1>
-            </div>
-        </section>
         </div>
     );
 };
